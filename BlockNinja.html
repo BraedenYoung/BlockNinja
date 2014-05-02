@@ -80,7 +80,7 @@
 		function create_wall(){
 			score++;
 			wall = [];
-			var opening = Math.floor(Math.random()*10);
+			var opening = 1 + Math.floor(Math.random()*8);
 			if(d == "right"){
 				for(i = 0 ; i < 10; i++){
 					if(i != opening)
@@ -224,7 +224,7 @@
 	    	ctx.strokeRect(x*cw, y*cw, cw, cw);
 	    }
 	    function paint_player(x, y){
-	    	ctx.fillStyle = "red";
+	    	ctx.fillStyle = "#85ACD3";
 	    	ctx.fillRect(x*cw, y*cw, cw, cw);
 	    	ctx.strokeStyle = "white";
 	    	ctx.strokeRect(x*cw, y*cw, cw, cw);
@@ -232,7 +232,7 @@
 	    function paint_wall(){
 			for(i = 0; i < wall.length; i++){
 				if(!check_collision(player.x,player.y,wall)){
-			    	ctx.fillStyle = "black";
+			    	ctx.fillStyle = "#FBC994";
 			    	ctx.fillRect(wall[i].x*cw, wall[i].y*cw, cw, cw);
 			    	ctx.strokeStyle = "white";
 			    	ctx.strokeRect(wall[i].x*cw, wall[i].y*cw, cw, cw);
@@ -262,6 +262,9 @@
 			else if(key == "39" && player.x != 9) player.x = ++player.x;
 			//down
 			else if(key == "40" && player.y != 9) player.y = ++player.y;
+			// if the player moves into the wall reset
+			if(check_collision(player.x,player.y,wall))
+				init();
 		})
 	}) // end of ready()
 </script>
