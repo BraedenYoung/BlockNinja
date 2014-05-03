@@ -23,7 +23,7 @@
 	</div>
 	
 
-<div class="modal fade" id="welcomeModal" tabindex="-1" role="dialog" aria-labelledby="modal" aria-hidden="true">
+	<div class="modal fade" id="welcomeModal" tabindex="-1" role="dialog" aria-labelledby="modal" aria-hidden="true">
 		<div class="modal-dialog">
 			<div class="modal-content">
 				<div class="modal-header">
@@ -61,25 +61,25 @@
 	</div>
 
 
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
 
-<script>
-	$(document).ready(function(){
+	<script>
+		$(document).ready(function(){
 
-		var canvas = $("#canvas")[0];
-		var ctx = canvas.getContext("2d");
-		var w = $("#canvas").width();
-		var h = $("#canvas").height();
-		var score = -1;
-		var cw = 40;
-		var player;
-		var wall;
-		var hasMoved = false;
-		var run = false;
-		var speed = 180;
-		
-		var possibleColors =["#ABB7DD","#ABD594","#F8F18B","#FFD8A1","#F9A98E"];
-		var wallColor;
+			var canvas = $("#canvas")[0];
+			var ctx = canvas.getContext("2d");
+			var w = $("#canvas").width();
+			var h = $("#canvas").height();
+			var score = -1;
+			var cw = 40;
+			var player;
+			var wall;
+			var hasMoved = false;
+			var run = false;
+			var speed = 180;
+
+			var possibleColors =["#ABB7DD","#ABD594","#F8F18B","#FFD8A1","#F9A98E"];
+			var wallColor;
 		// the initial direction for the wall
 		var d = "right";
 		var block;
@@ -91,20 +91,20 @@
 
 
 			speed = 180;
-		
+
 			score = -1;
 			hasMoved = false;
 			d = "right";
 			wall = [];
 			wallColor = possibleColors[0];
 			create_wall();
-	    	move_wall();
+			move_wall();
 
 
 	    	// Repaint at some particular interval
 	    	if(typeof game_loop != "undefined") clearInterval(game_loop);
-			
-   	
+
+
 	    	game_loop = setInterval(paint, speed);
 	    	
 	    }
@@ -122,22 +122,22 @@
 	    	}			
 	    })
 
-		function create_player(initialX,initialY){
-			return player = {
-				x: initialX,
-				y: initialY
-			};
+	    function create_player(initialX,initialY){
+	    	return player = {
+	    		x: initialX,
+	    		y: initialY
+	    	};
 
-		}
-		function create_block(X,Y){
-			return block = {
-				x: X, 
-				y: Y
-			};
-		}
+	    }
+	    function create_block(X,Y){
+	    	return block = {
+	    		x: X, 
+	    		y: Y
+	    	};
+	    }
 
-		function create_wall(){
-			score++;
+	    function create_wall(){
+	    	score++;
 
 			//Increase the difficulty as the user progresses
 			if((score + 1)  % 4 == 0)increase_difficulty();
@@ -217,22 +217,22 @@
 		}
 		function pick_direction(){
 			switch(Math.floor(Math.random() * 4) + 1){
-	    		case 1:
-	    			d = "right";
-	    		break;
-	    		case 2:
-	    			d = "left";
-	    		break;
-	    		case 3:
-					d= "up";
-	    		break;
-	    		case 4:
-	    			d = "down";
-	    		break; 
-	    		default:
-	    		ans = 9999;
-	    		break;
-	    	}
+				case 1:
+				d = "right";
+				break;
+				case 2:
+				d = "left";
+				break;
+				case 3:
+				d= "up";
+				break;
+				case 4:
+				d = "down";
+				break; 
+				default:
+				ans = 9999;
+				break;
+			}
 		}
 		function paint(){   
 				// paint the canvas now
@@ -252,20 +252,20 @@
 				var score_text = "Score: " + score;
 				ctx.font="30px Arial";
 				ctx.fillText(score_text, 5, h-5);
-		}
-	
-		function renderGrid(gridPixelSize, color){
-			ctx.save();
-			ctx.lineWidth = 0.2;
-			ctx.strokeStyle = color;
+			}
+
+			function renderGrid(gridPixelSize, color){
+				ctx.save();
+				ctx.lineWidth = 0.2;
+				ctx.strokeStyle = color;
 		    // horizontal grid lines
-	        for(var i = 0; i <= canvas.height; i = i + gridPixelSize){
-	        	ctx.beginPath();
-	        	ctx.moveTo(0, i);
-	        	ctx.lineTo(canvas.width, i);
-	        	ctx.closePath();
-	        	ctx.stroke();
-	        }
+		    for(var i = 0; i <= canvas.height; i = i + gridPixelSize){
+		    	ctx.beginPath();
+		    	ctx.moveTo(0, i);
+		    	ctx.lineTo(canvas.width, i);
+		    	ctx.closePath();
+		    	ctx.stroke();
+		    }
 	        // vertical grid lines
 	        for(var j = 0; j <= canvas.width; j = j + gridPixelSize){
 	        	ctx.beginPath();
@@ -290,33 +290,19 @@
 	    	ctx.strokeRect(x*cw, y*cw, cw, cw);
 	    }
 	    function paint_wall(){
-			for(i = 0; i < wall.length; i++){
-				if(!check_collision(player.x,player.y,wall)){
-			    	ctx.fillStyle = wallColor;
-			    	ctx.fillRect(wall[i].x*cw, wall[i].y*cw, cw, cw);
-			    	ctx.strokeStyle = "white";
-			    	ctx.strokeRect(wall[i].x*cw, wall[i].y*cw, cw, cw);
-			    }else{
+	    	for(i = 0; i < wall.length; i++){
+	    		if(!check_collision(player.x,player.y,wall)){
+	    			ctx.fillStyle = wallColor;
+	    			ctx.fillRect(wall[i].x*cw, wall[i].y*cw, cw, cw);
+	    			ctx.strokeStyle = "white";
+	    			ctx.strokeRect(wall[i].x*cw, wall[i].y*cw, cw, cw);
+	    		}else{
 			    	//collision
-					//restart game
-					run = false;
-					$('#myModal').modal('show');
-					$('#scoreDisplay').text("Your score was: "+score);
-					
-					$(document).keydown(function(e){
-						var key = e.which;
-						//We will add another clause to prevent reverse gear
-						if(key == "13" || key == "32"){
-							$('#myModal').modal('hide');
-							run = true;
-							init();
-							return;
-						}			
-					})
-			    }
-	    	}
-	    }
-	    function check_collision(x, y, array){
+					reset();
+				}
+			}
+		}
+		function check_collision(x, y, array){
 			for(var i = 0; i < array.length; i++)
 			{
 				if(array[i].x == x && array[i].y == y)
@@ -324,13 +310,32 @@
 			}
 			return false;
 		}
+		function reset(){
+
+		//restart game
+		run = false;
+		$('#myModal').modal('show');
+		$('#scoreDisplay').text("Your score was: "+score);
+		
+		$(document).keydown(function(e){
+			var key = e.which;
+			//We will add another clause to prevent reverse gear
+			if(key == "13" || key == "32"){
+				$('#myModal').modal('hide');
+				run = true;
+				init();
+				return;
+			}			
+		})
+
+		}
 		function increase_difficulty(){
 				// increase the speed of the wall and change the color 
 				speed = speed-10 ;
 				wallColor = possibleColors[possibleColors.indexOf(wallColor)+1];
 				clearInterval(game_loop);
 				game_loop = setInterval(paint, speed);
-		}
+			}
 		//Lets add the keyboard controls now
 		$(document).keydown(function(e){
 			
@@ -345,7 +350,7 @@
 			else if(key == "40" && player.y != 9) player.y = ++player.y;
 			// if the player moves into the wall reset
 			if(check_collision(player.x,player.y,wall))
-				init();
+				reset();
 		})
 	}) // end of ready()
 </script>
