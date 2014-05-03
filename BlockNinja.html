@@ -22,6 +22,45 @@
 		<canvas id="canvas" width="400" height="400"></canvas>
 	</div>
 	
+
+<div class="modal fade" id="welcomeModal" tabindex="-1" role="dialog" aria-labelledby="modal" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+
+					<h1 class="modal-title" style="text-align:center"> Welcome to BlockNinja</h1>
+				</div>
+				<div class="modal-body">
+					<h4> Maneuver your way through a series a rapidly advancing walls; watch out, they come from all directions. </h4>
+
+				</div>
+				<div class="modal-footer">
+					<h3 style="text-align:center">press enter to start</h3>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+	<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="basicModal" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+
+					<h1 class="modal-title" id="myModalLabel"> Ouch! </h1>
+				</div>
+				<div class="modal-body">
+					<h3 id="scoreDisplay">Your score was: </h3>
+
+				</div>
+				<div class="modal-footer">
+					<h3 style="text-align:center">press enter to play again</h3>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
 
 <script>
@@ -36,7 +75,11 @@
 		var player;
 		var wall;
 		var hasMoved = false;
+		var run = false;
+		var speed = 180;
 		
+		var possibleColors =["#ABB7DD","#ABD594","#F8F18B","#FFD8A1","#F9A98E"];
+		var wallColor;
 		// the initial direction for the wall
 		var d = "right";
 		var block;
@@ -45,23 +88,39 @@
 
 			renderGrid(40, "#EEEEEE");
 			create_player(9,5);
-			
+
+
+			speed = 180;
+		
 			score = -1;
 			hasMoved = false;
 			d = "right";
 			wall = [];
+			wallColor = possibleColors[0];
 			create_wall();
 	    	move_wall();
 
 
 	    	// Repaint at some particular interval
 	    	if(typeof game_loop != "undefined") clearInterval(game_loop);
-	    	
-	    	game_loop = setInterval(paint, 190);
+			
+   	
+	    	game_loop = setInterval(paint, speed);
 	    	
 	    }
 
-		init();
+
+	    $('#welcomeModal').modal('show');
+
+	    $(document).keydown(function(e){
+	    	var key = e.which;
+	    	if(key == "13" || key == "32"){
+	    		$('#welcomeModal').modal('hide');
+	    		run = true;
+	    		init();
+	    		return;
+	    	}			
+	    })
 
 		function create_player(initialX,initialY){
 			return player = {
@@ -79,6 +138,10 @@
 
 		function create_wall(){
 			score++;
+
+			//Increase the difficulty as the user progresses
+			if((score + 1)  % 4 == 0)increase_difficulty();
+
 			wall = [];
 			var opening = 1 + Math.floor(Math.random()*8);
 			if(d == "right"){
@@ -102,13 +165,10 @@
 						wall.push(create_block(i,0));
 				}
 			}
-
-
-
 		}
 		function move_wall(){
 			// hold the wall for a moment before moving
-			if(hasMoved){		
+			if(hasMoved && run){		
 
 				if(d == 'right'){
 					if(wall && wall[0].x != 9){
@@ -224,7 +284,7 @@
 	    	ctx.strokeRect(x*cw, y*cw, cw, cw);
 	    }
 	    function paint_player(x, y){
-	    	ctx.fillStyle = "#85ACD3";
+	    	ctx.fillStyle = "#E5B2D1";// grey #696969	
 	    	ctx.fillRect(x*cw, y*cw, cw, cw);
 	    	ctx.strokeStyle = "white";
 	    	ctx.strokeRect(x*cw, y*cw, cw, cw);
@@ -232,13 +292,27 @@
 	    function paint_wall(){
 			for(i = 0; i < wall.length; i++){
 				if(!check_collision(player.x,player.y,wall)){
-			    	ctx.fillStyle = "#FBC994";
+			    	ctx.fillStyle = wallColor;
 			    	ctx.fillRect(wall[i].x*cw, wall[i].y*cw, cw, cw);
 			    	ctx.strokeStyle = "white";
 			    	ctx.strokeRect(wall[i].x*cw, wall[i].y*cw, cw, cw);
 			    }else{
 			    	//collision
-					init();
+					//restart game
+					run = false;
+					$('#myModal').modal('show');
+					$('#scoreDisplay').text("Your score was: "+score);
+					
+					$(document).keydown(function(e){
+						var key = e.which;
+						//We will add another clause to prevent reverse gear
+						if(key == "13" || key == "32"){
+							$('#myModal').modal('hide');
+							run = true;
+							init();
+							return;
+						}			
+					})
 			    }
 	    	}
 	    }
@@ -249,6 +323,13 @@
 					return true;
 			}
 			return false;
+		}
+		function increase_difficulty(){
+				// increase the speed of the wall and change the color 
+				speed = speed-10 ;
+				wallColor = possibleColors[possibleColors.indexOf(wallColor)+1];
+				clearInterval(game_loop);
+				game_loop = setInterval(paint, speed);
 		}
 		//Lets add the keyboard controls now
 		$(document).keydown(function(e){
